@@ -2588,6 +2588,128 @@ var hpp_vars = [];
 <script type="text/javascript" src="https://www.eternalscent.co.za/wp-includes/js/dist/vendor/regenerator-runtime.min.js?ver=0.14.1" id="regenerator-runtime-js"></script>
 <script type="text/javascript" src="https://www.eternalscent.co.za/wp-content/plugins/ecomus-addons/assets/js/elementor-widgets.js?ver=2.0.0" id="ecomus-elementor-widgets-js"></script>
 
+
+  <!-- Widget Configuration -->
+<script>
+    window.ChatWidgetConfig = {
+      webhook: {
+        url: 'https://primary-production-9a3b.up.railway.app/webhook/9c33f18a-5341-46de-a656-4f6a62e83391/chat',
+        route: 'general',
+      },
+      branding: {
+        logo: 'https://images.app.goo.gl/3j1mtsPHV4Wkz1waA',
+        name: 'THE PERFUMES',
+        welcomeText: 'Get instant answers to your questions!',
+        responseTimeText: 'CLICK the button below to start Chatting',
+      },
+      style: {
+        primaryColor: '#10b981',
+        secondaryColor: '#059669',
+        position: 'left',
+        backgroundColor: '#ffffff',
+        fontColor: '#1f2937',
+      },
+      suggestedQuestions: [
+        'What are your best-selling perfumes?',
+        'How do I choose the right fragrance?',
+        'What are your shipping options?',
+        'Do you offer samples?'
+      ]
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/gh/funtastic418/chat-widget@main/chat-widget.js"></script>
+  <style>
+    .chat-widget small:contains("powered"),
+    .chat-widget small:contains("n8n"),
+    .chat-widget .attribution,
+    .chat-widget .powered-by,
+    .chat-widget a[href*="n8n"] {
+      color: white !important;
+      background-color: white !important;
+      font-size: 0.1px !important;
+      pointer-events: none !important;
+    }
+  </style>
+  <script>
+    function hideBrandingOnly() {
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.children.length === 0 && el.textContent) {
+          const text = el.textContent.trim();
+          if (text.toLowerCase() === 'powered by n8n' || 
+              text.toLowerCase() === 'powered by' ||
+              (text.toLowerCase().includes('powered by') && text.length < 30)) {
+            el.style.color = 'white';
+            el.style.backgroundColor = 'white';
+            el.style.fontSize = '0.1px';
+            el.style.pointerEvents = 'none';
+            el.style.userSelect = 'none';
+          }
+        }
+      });
+    }
+
+    function fixLinksToSameTab() {
+      const chatWidget = document.querySelector('.chat-widget') || document.body;
+      const links = chatWidget.querySelectorAll('a');
+      
+      links.forEach(link => {
+        if (link.getAttribute('target') === '_blank') {
+          link.removeAttribute('target');
+        }
+        
+        link.addEventListener('click', function(e) {
+          if (this.href && (this.href.startsWith('http://') || this.href.startsWith('https://'))) {
+            e.preventDefault();
+            window.location.href = this.href;
+          }
+        }, true);
+      });
+    }
+
+    setTimeout(() => {
+      hideBrandingOnly();
+      fixLinksToSameTab();
+      
+      let checkCount = 0;
+      const brandingCheck = setInterval(() => {
+        hideBrandingOnly();
+        fixLinksToSameTab();
+        checkCount++;
+        if (checkCount > 15) {
+          clearInterval(brandingCheck);
+        }
+      }, 2000);
+    }, 5000);
+
+    const observer = new MutationObserver(function(mutations) {
+      let shouldCheckLinks = false;
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) {
+              if (node.tagName === 'A' || node.querySelectorAll('a').length > 0) {
+                shouldCheckLinks = true;
+              }
+            }
+          });
+        }
+      });
+      
+      if (shouldCheckLinks) {
+        setTimeout(fixLinksToSameTab, 100);
+      }
+    });
+
+    setTimeout(() => {
+      const targetNode = document.querySelector('.chat-widget') || document.body;
+      observer.observe(targetNode, {
+        childList: true,
+        subtree: true
+      });
+    }, 6000);
+  </script>
+	
 </body>
 </html>
 
